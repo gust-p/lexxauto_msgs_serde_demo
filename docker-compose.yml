@@ -1,0 +1,44 @@
+name: poc-ros-zenoh
+
+x-environment: &environment
+    environment:
+      RUST_LOG: ${RUST_LOG:-trace}
+
+services:
+  zenoh-router:
+    <<: *environment
+    image: eclipse/zenoh:latest
+    command: "-c config.json5"
+    network_mode: host
+    volumes:
+      - ./router.json5:/config.json5:ro
+
+  zenoh-bridge:
+    <<: *environment
+    image: eclipse/zenoh-bridge-ros2dds:latest
+    command: "-c config.json5"
+    network_mode: host
+    volumes:
+      - ./bridge.json5:/config.json5:ro
+    depends_on:
+      zenoh-router:
+        condition: service_started
+
+  ros-instance:
+    <<: *environment
+    environment:
+      DISPLAY: "192.168.0.2:0.0"
+      RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+      ROS_AUTOMATIC_DISCOVERY_RANGE: LOCALHOST
+    build:
+      dockerfile: ros.Dockerfile
+      context: .
+    command: bash -c "source /opt/ros/rolling/setup.bash && sleep infinity"
+    network_mode: host
+    volumes:
+      - /tmp/.X11-unix/:/tmp/.X11-unix:rw
+    depends_on:
+      zenoh-router:
+        condition: service_started
+      zenoh-bridge:
+        condition: service_started

@@ -1,0 +1,19 @@
+[package]
+name = "zenoh_chatter_demo"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "zenoh_chatter_demo"
+crate-tyoe = ["cdylib"]
+
+[dependencies]
+byteorder = "1.5.0"
+cdr = "0.2.4"
+cdr-encoding = "0.10.2"
+lexxauto_msgs_rs = { git = "ssh://git@github.com/gust-p/lexxauto_msgs_rs.git", version = "0.1.0" }
+serde = { version = "1.0.219", features = ["derive"] }
+
+[dependencies.pyo3]
+version = "0.24.0"
+features = ["abi3-py38"]

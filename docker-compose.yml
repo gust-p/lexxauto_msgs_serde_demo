@@ -15,6 +15,8 @@ services:
 
   zenoh-bridge:
     <<: *environment
+    environment:
+      ROS_DISTRO: "humble"
     image: eclipse/zenoh-bridge-ros2dds:latest
     command: "-c config.json5"
     network_mode: host
@@ -33,7 +35,7 @@ services:
     build:
       dockerfile: ros.Dockerfile
       context: .
-    command: bash -c "source /opt/ros/rolling/setup.bash && sleep infinity"
+    command: bash -c "source /opt/ros/humble/setup.bash && sleep infinity"
     network_mode: host
     volumes:
       - /tmp/.X11-unix/:/tmp/.X11-unix:rw

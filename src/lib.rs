@@ -25,32 +25,20 @@ impl VectorClass {
 
     pub fn serialize(&self) -> Vec<u8> {
         println!("Serializing: {:?}", &self.0);
-        use std::mem::size_of;
-        let size = size_of::<Vector3>();
-        let serialized = to_vec_with_size_hint::<Vector3, LittleEndian>(&self.0, size).unwrap();
-        println!("Serialized number of bytes: {}", serialized.len());
-        println!(
-            "Serialized data: {:?}",
-            &serialized
-                .iter()
-                .map(|b| format!("{:02X}", b))
-                .collect::<Vec::<String>>()
-        );
-        serialized
-    }
-
-    pub fn serialize_cdr(&self) -> Vec<u8> {
-        let mut buffer = Vec::new();
-
-        // CDR header (4 bytes) - typically 0x00, 0x01, 0x00, 0x00 for little endian
-        buffer.extend_from_slice(&[0x00, 0x01, 0x00, 0x00]);
-
-        // Serialize each f64 in little endian
-        buffer.extend_from_slice(&self.0.x.to_le_bytes());
-        buffer.extend_from_slice(&self.0.y.to_le_bytes());
-        buffer.extend_from_slice(&self.0.z.to_le_bytes());
-
-        buffer
+        // use std::mem::size_of;
+        // let size = size_of::<Vector3>();
+        // let serialized = to_vec_with_size_hint::<Vector3, LittleEndian>(&self.0, size).unwrap();
+        // println!("Serialized number of bytes: {}", serialized.len());
+        // println!(
+        //     "Serialized data: {:?}",
+        //     &serialized
+        //         .iter()
+        //         .map(|b| format!("{:02X}", b))
+        //         .collect::<Vec::<String>>()
+        // );
+        // serialized
+        let buf = cdr::serialize::<_, _, cdr::CdrLe>(&self.0, cdr::size::Infinite).unwrap();
+        buf
     }
 
     #[staticmethod]
@@ -103,4 +91,25 @@ fn zenoh_chatter_demo(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<StdString>()?;
     m.add_class::<VectorClass>()?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serde() {
+        let vec = VectorClass(Vector3 {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        });
+        let serialized = vec.serialize();
+
+        let deserialized = VectorClass::deserialize(serialized);
+
+        assert_eq!(vec.0.x, deserialized.0.x);
+        assert_eq!(vec.0.y, deserialized.0.y);
+        assert_eq!(vec.0.z, deserialized.0.z);
+    }
 }

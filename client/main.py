@@ -33,7 +33,7 @@ def call_service_once(session, data_value):
             print(f"� Reply {reply_count} received from: {reply.ok.key_expr}")
 
             # Get response data
-            response_data = bytes(reply.ok.payload.to_bytes())
+            response_data = reply.ok.payload.to_bytes()
             print(f"Response data ({len(response_data)} bytes): {response_data.hex()}")
 
             # Try to deserialize

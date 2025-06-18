@@ -1,5 +1,5 @@
 # Multi-stage build for ROS2 service with r2r
-FROM ros:humble as ros2-base
+FROM ros:humble AS ros2-base
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -23,7 +23,7 @@ RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 SHELL ["/bin/bash", "-c"]
 
 # Build stage
-FROM ros2-base as builder
+FROM ros2-base AS builder
 
 WORKDIR /app
 

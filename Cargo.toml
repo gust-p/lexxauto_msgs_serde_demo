@@ -11,7 +11,7 @@ crate-tyoe = ["cdylib"]
 byteorder = "1.5.0"
 cdr = "0.2.4"
 cdr-encoding = "0.10.2"
-lexxauto_msgs_rs = { git = "ssh://git@github.com/gust-p/lexxauto_msgs_rs.git", version = "0.1.0" }
+lexxauto_msgs_rs = { git = "ssh://git@github.com/LexxPluss/lexxauto_msgs_rs.git", version = "0.1.0" }
 serde = { version = "1.0.219", features = ["derive"] }
 
 [dependencies.pyo3]

@@ -26,19 +26,35 @@ services:
       zenoh-router:
         condition: service_started
 
-  ros-instance:
+  # ros-instance:
+  #   <<: *environment
+  #   environment:
+  #     DISPLAY: "192.168.0.2:0.0"
+  #     RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+  #     ROS_AUTOMATIC_DISCOVERY_RANGE: LOCALHOST
+  #   build:
+  #     dockerfile: ros.Dockerfile
+  #     context: .
+  #   command: bash -c "source /opt/ros/humble/setup.bash && sleep infinity"
+  #   network_mode: host
+  #   volumes:
+  #     - /tmp/.X11-unix/:/tmp/.X11-unix:rw
+  #   depends_on:
+  #     zenoh-router:
+  #       condition: service_started
+  #     zenoh-bridge:
+  #       condition: service_started
+  ros-service:
     <<: *environment
     environment:
-      DISPLAY: "192.168.0.2:0.0"
+      ROS_DOMAIN_ID: 0
       RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
       ROS_AUTOMATIC_DISCOVERY_RANGE: LOCALHOST
-    build:
-      dockerfile: ros.Dockerfile
-      context: .
-    command: bash -c "source /opt/ros/humble/setup.bash && sleep infinity"
+    build: 
+      context: ./service
+      dockerfile: service.Dockerfile
+    command: /usr/local/bin/service
     network_mode: host
-    volumes:
-      - /tmp/.X11-unix/:/tmp/.X11-unix:rw
     depends_on:
       zenoh-router:
         condition: service_started

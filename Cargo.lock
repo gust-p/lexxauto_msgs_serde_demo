@@ -221,7 +221,7 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 [[package]]
 name = "lexxauto_msgs_rs"
 version = "0.1.0"
-source = "git+ssh://git@github.com/gust-p/lexxauto_msgs_rs.git#4d0e66b3005f4c943ce203672c619e55722379ce"
+source = "git+ssh://git@github.com/LexxPluss/lexxauto_msgs_rs.git#cfcd1db88cd5641e68bfe4ab0a66d82211e879ca"
 dependencies = [
  "cargo-emit",
  "roslibrust",
